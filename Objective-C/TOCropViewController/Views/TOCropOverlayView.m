@@ -20,11 +20,16 @@
 //  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
 //  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
 #import "TOCropOverlayView.h"
 
 static const CGFloat kTOCropOverLayerCornerWidth = 20.0f;
 
 @interface TOCropOverlayView ()
+
+@property (nonatomic, strong) UIImageView *foregroundImageView;
+@property (nonatomic, strong) NSString *overlayImagePath;
+
 
 @property (nonatomic, strong) NSArray *horizontalGridLines;
 @property (nonatomic, strong) NSArray *verticalGridLines;
@@ -50,8 +55,30 @@ static const CGFloat kTOCropOverLayerCornerWidth = 20.0f;
     return self;
 }
 
+- (instancetype)initWithFrameAndOverlayImagePath:(CGRect)frame overlayImagePath:(NSString *)overlayImagePath
+{
+    if (self = [super initWithFrame:frame]) {
+        _overlayImagePath = overlayImagePath;
+        self.clipsToBounds = NO;
+        [self setup];
+    }
+    
+    return self;
+}
+
 - (void)setup
 {
+    
+    CGSize boundsSize = self.bounds.size;
+    NSString *const imageName = @"overlay_left";
+    
+    UIImage *overlayImage = [UIImage imageNamed:self.overlayImagePath];
+    
+    self.foregroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, boundsSize.width, boundsSize.height)];
+    self.foregroundImageView.image = overlayImage;
+    self.foregroundImageView.center = self.foregroundImageView.center;
+    [self addSubview: self.foregroundImageView];
+    
     UIView *(^newLineView)(void) = ^UIView *(void){
         return [self createNewLineView];
     };
@@ -65,6 +92,7 @@ static const CGFloat kTOCropOverLayerCornerWidth = 20.0f;
     
     self.displayHorizontalGridLines = YES;
     self.displayVerticalGridLines = YES;
+    
 }
 
 - (void)setFrame:(CGRect)frame
@@ -100,6 +128,8 @@ static const CGFloat kTOCropOverLayerCornerWidth = 20.0f;
         }
         
         lineView.frame = frame;
+        self.foregroundImageView.frame =(CGRect){10, 10, boundsSize.width - 20, boundsSize.height - 20};
+        self.foregroundImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     
     //corner liness

@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Shows and hides the interior grid lines with an optional crossfade animation. */
 - (void)setGridHidden:(BOOL)hidden animated:(BOOL)animated;
 
+- (nonnull instancetype)initWithFrameAndOverlayImagePath:(CGRect)frame overlayImagePath:(NSString *)overlayImagePath;
+
 @end
 
 NS_ASSUME_NONNULL_END

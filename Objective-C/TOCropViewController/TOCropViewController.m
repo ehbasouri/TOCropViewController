@@ -34,6 +34,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
 /* The target image */
 @property (nonatomic, readwrite) UIImage *image;
+@property (nonatomic, readwrite) NSString *overlayImagePath;
 
 /* The cropping style of the crop view */
 @property (nonatomic, assign, readwrite) TOCropViewCroppingStyle croppingStyle;
@@ -71,7 +72,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
 @implementation TOCropViewController
 
-- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image
+- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image overlayImagePath:(NSString*)overlayImagePath
 {
     NSParameterAssert(image);
 
@@ -80,6 +81,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
         // Init parameters
         _image = image;
         _croppingStyle = style;
+        _overlayImagePath = overlayImagePath;
         
         // Set up base view controller behaviour
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -105,7 +107,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
 - (instancetype)initWithImage:(UIImage *)image
 {
-    return [self initWithCroppingStyle:TOCropViewCroppingStyleDefault image:image];
+    return [self initWithCroppingStyle:TOCropViewCroppingStyleDefault image:image overlayImagePath: self.overlayImagePath];
 }
 
 - (void)viewDidLoad
@@ -1074,7 +1076,8 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     // Lazily create the crop view in case we try and access it before presentation, but
     // don't add it until our parent view controller view has loaded at the right time
     if (!_cropView) {
-        _cropView = [[TOCropView alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
+
+        _cropView = [[TOCropView alloc] initWithCroppingStyle:self.croppingStyle image:self.image overlayImagePath: self.overlayImagePath];
         _cropView.delegate = self;
         _cropView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.view addSubview:_cropView];

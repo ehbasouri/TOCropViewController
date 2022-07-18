@@ -369,7 +369,7 @@
  @param style The cropping style that will be used with this view controller (eg, rectangular, or circular)
  @param image The image that will be cropped
  */
-- (nonnull instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(nonnull UIImage *)image NS_SWIFT_NAME(init(croppingStyle:image:));
+- (nonnull instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(nonnull UIImage *)image overlayImagePath:(NSString*)overlayImagePath NS_SWIFT_NAME(init(croppingStyle:image:));
 
 /**
  Commits the crop action as if user pressed done button in the bottom bar themself

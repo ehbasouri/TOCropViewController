@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 
 @property (nonatomic, strong, readwrite) UIImage *image;
 @property (nonatomic, assign, readwrite) TOCropViewCroppingStyle croppingStyle;
+@property (nonatomic, strong, readwrite) NSString *overlayImagePath;
 
 /* Views */
 @property (nonatomic, strong) UIImageView *backgroundImageView;     /* The main image view, placed within the scroll view */
@@ -114,14 +115,15 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 
 - (instancetype)initWithImage:(UIImage *)image
 {
-    return [self initWithCroppingStyle:TOCropViewCroppingStyleDefault image:image];
+    return [self initWithCroppingStyle:TOCropViewCroppingStyleDefault image:image overlayImagePath: self.overlayImagePath];
 }
 
-- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image
+- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image overlayImagePath:(NSString *)overlayImagePath
 {
     if (self = [super init]) {
         _image = image;
         _croppingStyle = style;
+        _overlayImagePath = overlayImagePath;
         [self setup];
     }
     
@@ -180,7 +182,8 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     [self.backgroundContainerView addSubview:self.backgroundImageView];
     [self.scrollView addSubview:self.backgroundContainerView];
     
-    //Grey transparent overlay view
+    //Grey transparent overlay view ============================
+    
     self.overlayView = [[UIView alloc] initWithFrame:self.bounds];
     self.overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.overlayView.backgroundColor = [self.backgroundColor colorWithAlphaComponent:0.35f];
@@ -211,6 +214,7 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     self.foregroundContainerView.userInteractionEnabled = NO;
     [self addSubview:self.foregroundContainerView];
     
+    
     self.foregroundImageView = [[UIImageView alloc] initWithImage:self.image];
     self.foregroundImageView.layer.minificationFilter = kCAFilterTrilinear;
     [self.foregroundContainerView addSubview:self.foregroundImageView];
@@ -225,7 +229,11 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     if (circularMode) { return; }
     
     // The white grid overlay view
-    self.gridOverlayView = [[TOCropOverlayView alloc] initWithFrame:self.foregroundContainerView.frame];
+    
+    printf("initWithFrameAndOverlayImagePath ============================================================== ");
+    NSLog(self.overlayImagePath);
+    
+    self.gridOverlayView = [[TOCropOverlayView alloc] initWithFrameAndOverlayImagePath:self.foregroundContainerView.frame overlayImagePath:self.overlayImagePath ];
     self.gridOverlayView.userInteractionEnabled = NO;
     self.gridOverlayView.gridHidden = YES;
     [self addSubview:self.gridOverlayView];
@@ -815,7 +823,7 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 {
     if (recognizer.state == UIGestureRecognizerStateBegan)
         [self.gridOverlayView setGridHidden:NO animated:YES];
-    
+
     if (recognizer.state == UIGestureRecognizerStateEnded)
         [self.gridOverlayView setGridHidden:YES animated:YES];
 }
