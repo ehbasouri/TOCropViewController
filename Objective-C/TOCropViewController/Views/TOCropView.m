@@ -230,9 +230,6 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     
     // The white grid overlay view
     
-    printf("initWithFrameAndOverlayImagePath ============================================================== ");
-    NSLog(self.overlayImagePath);
-    
     self.gridOverlayView = [[TOCropOverlayView alloc] initWithFrameAndOverlayImagePath:self.foregroundContainerView.frame overlayImagePath:self.overlayImagePath ];
     self.gridOverlayView.userInteractionEnabled = NO;
     self.gridOverlayView.gridHidden = YES;
